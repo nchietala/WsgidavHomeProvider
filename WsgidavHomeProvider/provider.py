@@ -1,9 +1,12 @@
 from wsgidav import fs_dav_provider as fdp, compat, util
+from wsgidav.util import get_module_logger
 import os
 import pwd
 import grp
 import stat
-from wsgidav.wsgidav_app import _logger
+
+
+_logger = get_module_logger(__name__)
 
 
 def mod_to_stat(mod: int) -> int:
@@ -76,10 +79,16 @@ class HomeProvider(fdp.FilesystemProvider):
         assert 'wsgidav.auth.user_name' in environ
         assert environ.get('wsgidav.auth.realm') == 'PAM(login)'
 
+        format_data = {
+            'user': environ['wsgidav.auth.user_name']
+        }
+        if '{group}' in self.root_folder_path:
+            format_data['group'] = pwd.getpwnam(environ['wsgidav.auth.user_name'])
+
         return os.path.abspath(
             os.path.expandvars(
                 os.path.expanduser(
-                    self.root_folder_path.replace('~', '~%s' % environ['wsgidav.auth.user_name'])
+                    self.root_folder_path.replace('~', '~{user}').format(**format_data)
                 )
             )
         )
@@ -89,7 +98,6 @@ class HomeProvider(fdp.FilesystemProvider):
         Same as the parent class, but uses the new _render_root method
         """
         root_path = self._render_root(environ)
-
         assert root_path is not None
         assert compat.is_native(root_path)
         assert compat.is_native(path)
