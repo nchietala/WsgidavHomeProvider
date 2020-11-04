@@ -1,0 +1,14 @@
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.metadata]
+module = "WsgidavHomeProvider"
+author = "Nicholas Hietala"
+author-email = "nchietala@gmail.com"
+classifiers = ["License :: OSI Approved :: MIT License"]
+requires = [
+    'wsgidav ~=3.0.3',
+    'python-pam ~=1.8.4',
+    'redis ~=3.5.3'
+]

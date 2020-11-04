@@ -1,0 +1,53 @@
+# settings for HomeProvider class
+provider_mapping:
+    "/home":
+        provider: WsgidavHomeProvider.HomeProvider
+        kwargs:
+            path: '~'           # default '~': the path to the desired directory, based on the authenticated user
+            readonly: False     # default False
+            set_user: True      # default True: determines what to do with newly created files and folders
+                                # when False, leaves the owner as the process that runs the wsgi server
+                                # when True sets the owner to the logged in user
+                                # when set to an integer sets the owner to the user with that uid
+                                # when set to a string sets the owner to the user by that name
+            set_group: 'users'  # default True: same as `set_user` but sets the group
+            chmod: 600          # default 640: sets read-write-execute of newly created files and folders
+
+
+
+# Settings for the PAMLockoutController class
+http_authenticator:
+    accept_basic: true
+    accept_digest: false
+    default_to_digest: false
+    trusted_auth_header: null
+    domain_controller: WsgidavHomeProvider.PAMLockoutController
+
+
+pam_dc:
+    service: "login"
+    encoding: "utf-8"
+    resetcreds: true
+
+    lockout:
+        timing: 4.25
+        #        The default lockout timing behavior is an exponential wait timer, every
+        #        login attempt must wait for n^x seconds, where n is equal to the
+        #        'lockout_timing' setting, and x is equal to the number of previous
+        #        failed login attempts.
+
+        #        lockout_timing: [6, 30]
+
+        #        If you don't like the exponential wait timer you can use the count-and-lock
+        #        method, where a user is given x attempts and then has to wait n minutes. The
+        #        count-and-wait method will be used if you set 'lockout_timing' to a list,
+        #        the first number in the list being the number of attempts given, and the
+        #        second number is how many minutes a user has to wait before retrying. Count
+        #        and wait behavior can reduce the number of redis keys needed because it
+        #        does not have to store them as long
+
+        redis_host: localhost
+        redis_port: 6379
+        redis_db: 0
+        redis_password: null
+        redis_prefix: wsgidav_login_attempt_
