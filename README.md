@@ -48,3 +48,9 @@ pam_dc:
 
 Again, see the `sample_config.yaml` file for valid configuration
 options.
+
+## Installation
+
+```
+pip install https://github.com/nchietala/WsgidavHomeProvider/blob/main/dist/WsgidavHomeProvider-0.1.0.tar.gz?raw=true
+```
