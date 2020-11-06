@@ -49,6 +49,11 @@ pam_dc:
 Again, see the `sample_config.yaml` file for valid configuration
 options.
 
+If you are running wsgidav behind another server (such as apache
+or nginx acting as an ssl terminator) that you have that server
+setting the HTTP_X_FORWARDED_FOR header correctly, without it
+all requests will be seen as coming from the same address.
+
 ## Installation
 
 ```
